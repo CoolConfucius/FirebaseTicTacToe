@@ -4,6 +4,10 @@ body {
   font-size: 16px; 
 }
 
+span{
+  color: white;
+}
+
 #lobby {
   margin-top: 25px; 
 }
@@ -11,8 +15,6 @@ body {
 #game {
   margin-bottom: 50px; 
 }
-
-
 
 #game > .row > div{
   height: 75px; 
@@ -27,6 +29,7 @@ body {
 #display{
   border: none;
   font-size: 50px; 
+  padding-top: 30px; 
 }
 
 .tile{
@@ -39,12 +42,6 @@ body {
   cursor: pointer;
 }
 
-
-
-span{
-  color: white;
-}
-
-#display {
-  padding-top: 30px; 
+#reset{
+  display: none;
 }

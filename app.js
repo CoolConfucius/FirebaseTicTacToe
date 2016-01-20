@@ -1,11 +1,11 @@
 'use strict'; 
 $(document).ready(init); 
 
-var ref = new Firebase('https://tictactoe2016.firebaseio.com/');
+var myFirebase = 'tictactoe2016';
+var ref = new Firebase('https://'+myFirebase+'.firebaseio.com/');
 var playersRef = ref.child('players')
 var player; 
 var obj = {};  
-
 
 function init() { 
   ref.child('state').on('value', function(snap) {    
@@ -74,18 +74,16 @@ function init() {
       $('#display').text(obj.turn + "'s turn");
     };
   });
-  
+
   ref.child('postGame').on('value', function(snap){
     if (snap.val() && obj.state === "gameOver") { 
       $('#display').text(snap.val()); 
       $('#reset').show().click(reset); 
-    };
-  })
+    } else { $('#reset').hide(); }; 
+  });
 
   $('#submit').click(enterName);
   $('.tile').click(markTile); 
-
-  $('#game').on('click', '.tile',(markTile)); 
 };
 
 function enterName() {
@@ -103,6 +101,7 @@ function enterName() {
       return; 
     }
   });
+  $('#submit').hide(); $('#label').hide(); 
 }
 
 function startGame(){
@@ -172,7 +171,7 @@ var check = function(t, t1, t2, xo){
 
 function reset(){
   if (obj.state !== "gameOver") { return };
-  ref.child('postGame').set("X's turn"); 
+  ref.child('postGame').remove(); 
   ref.child('tiles').set({
     t0: '', t1: '', t2: '', 
     t3: '', t4: '', t5: '', 
@@ -186,6 +185,7 @@ function reset(){
   ref.child('moves').set(0); 
   obj.moves = 0; 
   clearDom(); 
+  $('#reset').hide(); 
 }
 
 function clearDom(){
