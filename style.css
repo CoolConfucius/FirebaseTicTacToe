@@ -5,11 +5,11 @@ body {
 }
 
 #lobby {
-  margin-top: 50px; 
+  margin-top: 25px; 
 }
 
 #game {
-  margin-bottom: 100px; 
+  margin-bottom: 50px; 
 }
 
 
@@ -19,7 +19,7 @@ body {
 }
 
 
-#display, .tile, .green{
+#display, .tile{
   background-color: green;   
   border: solid;
 }
@@ -30,7 +30,7 @@ body {
 }
 
 .tile{
-  font-size: 75px;
+  font-size: 32px;
   color: white;
   border-color: black;
 }
@@ -45,6 +45,6 @@ span{
   color: white;
 }
 
-#play, #display {
+#display {
   padding-top: 30px; 
 }

@@ -9,18 +9,19 @@ var obj = {};
 
 function init() { 
   ref.child('state').on('value', function(snap) {    
-    console.log(snap.val());
     if (!snap.val()) {
       ref.child('state').set('lobby');
       obj.state = 'lobby';
-      console.log("success?");
     } else {
       obj.state = snap.val(); 
     }
   }); 
 
   ref.child('turn').on('value', function(snap){
-    if (snap.val()) {obj.turn = snap.val()};
+    if (snap.val()) {
+      obj.turn = snap.val()
+      $('#display').text(obj.turn + "'s turn");
+    };
   });
 
   ref.child('tiles').on('value', function(snap){
@@ -46,6 +47,31 @@ function init() {
   $('#game').on('click', '.tile',(markTile)); 
 };
 
+function enterName() {
+  playersRef.once('value', function(snapshot){
+    console.log(snapshot.val());
+    if (!snapshot.val()) {
+      playersRef.push($('#name').val() );
+      player = 'p1'; // this is how you know which player you are.
+    } else if( Object.keys(snapshot.val()).length === 1){
+      playersRef.push($('#name').val() );
+      player = 'p2';
+      startGame(); 
+    } else {
+      return; 
+    }
+  });
+}
+
+function startGame(){
+  if (obj.state === "lobby") {
+    ref.child('state').set('game');
+    ref.child('turn').set('p1');
+    $('#display').text("p1's turn")
+    obj.turn = "p1"; 
+    ref.child('moves').set(0); 
+  };
+}
 
 function markTile(){
   console.log("MARKTILE");
@@ -71,39 +97,6 @@ function markTile(){
 
 
 
-function enterName() {
-  console.log($('#name').val());
-  
-  playersRef.once('value', function(snapshot){
-    console.log(snapshot.val());
-    if (!snapshot.val()) {
-      playersRef.push($('#name').val() );
-      player = 'p1'; // this is how you know which player you are.
-    } else if( Object.keys(snapshot.val()).length === 1){
-      playersRef.push($('#name').val() );
-      player = 'p2';
-      startGame(); 
-    } else {
-      return; 
-    }
-  });
-}
-
-
-function startGame(){
-  // make turn child in firebase and initialize it to p1; 
-  // ref.child('state').set('countDown');
-  console.log("startGame");
-  console.log("state: ", obj.state);
-  if (obj.state === "lobby") {
-    ref.child('state').set('game');
-    ref.child('turn').set('p1');
-    $('#display').text("p1's turn")
-    obj.turn = "p1"; 
-    ref.child('moves').set(0); 
-  };
-
-}
 
 
 
@@ -118,12 +111,11 @@ function updateTiles(){
     if (obj.moves >= 5) {
       console.log(win(obj.turn));
       if (win(obj.turn)) { 
-        // alert(obj.turn + "wins!"); 
         $('#display').text(obj.turn+" wins!");
         obj.state = "gameOver";
         ref.child('state').set('gameOver'); 
+        ref.child('winner').set(obj.turn);
       } else if (obj.moves === 9){
-        // alert("It's a tie!");
         $('#display').text("It's a tie!");
         obj.state = "gameOver";
         ref.child('state').set('gameOver'); 
