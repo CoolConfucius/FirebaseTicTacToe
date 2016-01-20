@@ -20,9 +20,11 @@ function init() {
   playersRef.on('value', function(snap){
     if (snap.val() && obj.state === "lobby") {
       if ( Object.keys(snap.val()).length === 1 ) {
+        $('#submit').show(); 
         $('#display').text("Waiting for one more player to log in.");
       };
     } else {
+      $('#submit').show(); 
       $('#display').text("Waiting for two players to log in.");
     }    
   })
@@ -63,7 +65,11 @@ function init() {
   });
 
   ref.child('moves').on('value', function(snap){
-    if (snap.val()) { obj.moves = snap.val(); };
+    if (snap.val()) { obj.moves = snap.val(); }
+    else { 
+      ref.child('moves').set(0);
+      obj.moves = 0; 
+    };
   })
 
 
@@ -90,7 +96,6 @@ function init() {
 
 function enterName() {
   playersRef.once('value', function(snap){
-    console.log(snap.val());
     if (!snap.val()) {
       playersRef.push($('#name').val() );
       player = 'X'; 
@@ -118,7 +123,6 @@ function startGame(){
 }
 
 function markTile(){
-  console.log("MARKTILE");
   if (obj.state !== "game") { return; };
   if (obj.turn !== player) { return; };
   var $this = $(this);
@@ -183,7 +187,8 @@ function reset(){
   obj.state = 'lobby';
   ref.child('turn').remove();
   playersRef.remove(); 
-  ref.child('moves').remove(); 
+  player = null; 
+  ref.child('moves').set(0); 
   clearDom(); 
   $('#reset').hide(); 
   $('#submit').show(); 
