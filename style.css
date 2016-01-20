@@ -41,7 +41,3 @@ span{
 .tile:hover{
   cursor: pointer;
 }
-
-#reset{
-  display: none;
-}

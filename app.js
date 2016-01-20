@@ -20,12 +20,13 @@ function init() {
   playersRef.on('value', function(snap){
     if (snap.val() && obj.state === "lobby") {
       if ( Object.keys(snap.val()).length === 1 ) {
-        $('#display').text("Waiting for one more player to log in.");
+        $('#submit').show(); 
+        $('#display').text("Waiting for player O to log in.");
       };
     } else {
-      $('#display').text("Waiting for two players to log in.");
-    }
-    
+      $('#submit').show(); 
+      $('#display').text("Waiting for player X to log in.");
+    }    
   })
 
   ref.child('tiles').on('value', function(snap){
@@ -64,7 +65,11 @@ function init() {
   });
 
   ref.child('moves').on('value', function(snap){
-    if (snap.val()) { obj.moves = snap.val(); };
+    if (snap.val()) { obj.moves = snap.val(); }
+    else { 
+      ref.child('moves').set(0);
+      obj.moves = 0; 
+    };
   })
 
 
@@ -82,13 +87,15 @@ function init() {
     } else { $('#reset').hide(); }; 
   });
 
-  $('#submit').click(enterName);
+  if (!player) { 
+    $('#submit').show().click(enterName); 
+  };
+  
   $('.tile').click(markTile); 
 };
 
 function enterName() {
   playersRef.once('value', function(snap){
-    console.log(snap.val());
     if (!snap.val()) {
       playersRef.push($('#name').val() );
       player = 'X'; 
@@ -116,7 +123,6 @@ function startGame(){
 }
 
 function markTile(){
-  console.log("MARKTILE");
   if (obj.state !== "game") { return; };
   if (obj.turn !== player) { return; };
   var $this = $(this);
@@ -177,15 +183,15 @@ function reset(){
     t3: '', t4: '', t5: '', 
     t6: '', t7: '', t8: ''
   });
-  ref.child('state').set('game');
-  obj.state = 'game';
-  ref.child('turn').set('X');
-  obj.turn = "X"; 
-  $('#display').text("X's turn")
+  ref.child('state').set('lobby');
+  obj.state = 'lobby';
+  ref.child('turn').remove();
+  playersRef.remove(); 
+  player = null; 
   ref.child('moves').set(0); 
-  obj.moves = 0; 
   clearDom(); 
   $('#reset').hide(); 
+  $('#submit').show(); 
 }
 
 function clearDom(){
