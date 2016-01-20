@@ -17,6 +17,17 @@ function init() {
     }
   }); 
 
+  playersRef.on('value', function(snap){
+    if (snap.val() && obj.state === "lobby") {
+      if ( Object.keys(snap.val()).length === 1 ) {
+        $('#display').text("Waiting for one more player to log in.");
+      };
+    } else {
+      $('#display').text("Waiting for two players to log in.");
+    }
+    
+  })
+
   ref.child('tiles').on('value', function(snap){
     if (!snap.val()) {
       ref.child('tiles').set({
@@ -78,13 +89,13 @@ function init() {
 };
 
 function enterName() {
-  playersRef.once('value', function(snapshot){
-    console.log(snapshot.val());
-    if (!snapshot.val()) {
+  playersRef.once('value', function(snap){
+    console.log(snap.val());
+    if (!snap.val()) {
       playersRef.push($('#name').val() );
       player = 'X'; 
       $('#display').text("You are player X! Waiting for player O")
-    } else if( Object.keys(snapshot.val()).length === 1){
+    } else if( Object.keys(snap.val()).length === 1){
       playersRef.push($('#name').val() );
       player = 'O';
       startGame(); 
