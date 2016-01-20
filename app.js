@@ -18,7 +18,7 @@ function init() {
   }); 
 
   ref.child('turn').on('value', function(snap){
-    if (snap.val()) {
+    if (snap.val() && obj.state === "game") {
       obj.turn = snap.val()
       $('#display').text(obj.turn + "'s turn");
     };
@@ -32,7 +32,31 @@ function init() {
         t6: '', t7: '', t8: ''
       });
     } else {
-      updateTiles(); 
+      var board = snap.val(); 
+      clearDom(); 
+      $('#t0').text(board.t0); $('#t1').text(board.t1); $('#t2').text(board.t2);
+      $('#t3').text(board.t3); $('#t4').text(board.t4); $('#t5').text(board.t5);
+      $('#t6').text(board.t6); $('#t7').text(board.t7); $('#t8').text(board.t8);
+      
+      if (obj.moves >= 5) {
+        console.log('obj:', obj);
+        
+        if (win(obj.turn)) { 
+          obj.state = "gameOver";
+          ref.child('state').set('gameOver'); 
+          ref.child('postGame').set(obj.turn + "wins!");
+        } 
+        else if (obj.moves === 9){
+          obj.state = "gameOver";
+          ref.child('state').set('gameOver'); 
+          ref.child('postGame').set("It's a tie!");
+          obj.moves = 0; 
+          ref.child('moves').set(0); 
+        }
+      }; 
+      if (obj.state === "game") {
+        changeTurns(); 
+      };
     }
   });
 
@@ -76,6 +100,7 @@ function startGame(){
     $('#display').text("X's turn")
     obj.turn = "X"; 
     ref.child('moves').set(0); 
+    obj.moves = 0; 
   };
 }
 
@@ -90,12 +115,13 @@ function markTile(){
   ref.child('moves').transaction(function(oldVal){
     return oldVal + 1; 
   });
+  obj.moves++; 
   
-  updateTiles(); 
+  // updateTiles(); 
 
-  if (obj.state === "game") {
-    changeTurns(); 
-  };
+  // if (obj.state === "game") {
+  //   changeTurns(); 
+  // };
 }
 
 
@@ -103,31 +129,11 @@ function markTile(){
 
 
 
-function updateTiles(){
-  ref.child('tiles').on('value', function(snap){
-    var board = snap.val(); 
-    clearDom(); 
-    $('#t0').text(board.t0); $('#t1').text(board.t1); $('#t2').text(board.t2);
-    $('#t3').text(board.t3); $('#t4').text(board.t4); $('#t5').text(board.t5);
-    $('#t6').text(board.t6); $('#t7').text(board.t7); $('#t8').text(board.t8);
-    
-    if (obj.moves >= 5 && obj.state==="game") {
-      console.log(win(obj.turn));
-      if (win(obj.turn)) { 
-        // $('#display').text(obj.turn+" wins!");
-        obj.state = "gameOver";
-        ref.child('state').set('gameOver'); 
-        ref.child('postGame').set(obj.turn + "wins!");
-      } else if (obj.moves === 9){
-        // $('#display').text("It's a tie!");
-        obj.state = "gameOver";
-        ref.child('state').set('gameOver'); 
-        ref.child('postGame').set("It's a tie!");
-      }
-    }; 
+  // ref.child('tiles').on('value', function(snap){
 
-  })
-}
+
+  // })
+
 
 function clearDom(){
   var str = '#t';
@@ -148,7 +154,6 @@ function changeTurns(){
 };
 
 var win = function(xo) {
-  console.log("win?");
   var $t0 = $('#t0').text(); 
   var $t1 = $('#t1').text(); 
   var $t2 = $('#t2').text(); 
@@ -186,8 +191,8 @@ function reset(){
   ref.child('state').set('game');
   obj.state = 'game';
   ref.child('turn').set('X');
-  $('#display').text("X's turn")
   obj.turn = "X"; 
+  $('#display').text("X's turn")
   ref.child('moves').set(0); 
   obj.moves = 0; 
   updateTiles();  
