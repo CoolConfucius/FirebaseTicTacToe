@@ -61,15 +61,12 @@ function markTile(){
   ref.child('moves').transaction(function(oldVal){
     return oldVal + 1; 
   });
-  if (obj.turn === "p1") {
-    obj.turn = "p2";
-    $('#display').text("p2's turn");
-  } else {
-    obj.turn = "p1";
-    $('#display').text("p1's turn");
-  }
-  ref.child('turn').set(obj.turn); 
+  
   updateTiles(); 
+
+  if (obj.state === "game") {
+    changeTurns(); 
+  };
 }
 
 
@@ -114,12 +111,10 @@ function updateTiles(){
   ref.child('tiles').on('value', function(snap){
     var board = snap.val(); 
     clearDom(); 
-
-    $('#display').text(obj.turn + "'s turn"); 
     $('#t0').text(board.t0); $('#t1').text(board.t1); $('#t2').text(board.t2);
     $('#t3').text(board.t3); $('#t4').text(board.t4); $('#t5').text(board.t5);
     $('#t6').text(board.t6); $('#t7').text(board.t7); $('#t8').text(board.t8);
-    // $('#timer').text()
+    
     if (obj.moves >= 5) {
       console.log(win(obj.turn));
       if (win(obj.turn)) { 
@@ -133,9 +128,8 @@ function updateTiles(){
         obj.state = "gameOver";
         ref.child('state').set('gameOver'); 
       }
+    }; 
 
-
-    };
   })
 }
 
@@ -144,6 +138,17 @@ function clearDom(){
   for (var i = 0; i <= 8; i++) {
     $(str+i).text('');
   };
+};
+
+function changeTurns(){
+  if (obj.turn === "p1") {
+    obj.turn = "p2";
+    $('#display').text("p2's turn");
+  } else {
+    obj.turn = "p1";
+    $('#display').text("p1's turn");
+  }
+  ref.child('turn').set(obj.turn); 
 };
 
 var win = function(xo) {
