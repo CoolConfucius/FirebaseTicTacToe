@@ -17,13 +17,6 @@ function init() {
     }
   }); 
 
-  ref.child('turn').on('value', function(snap){
-    if (snap.val() && obj.state === "game") {
-      obj.turn = snap.val()
-      $('#display').text(obj.turn + "'s turn");
-    };
-  });
-
   ref.child('tiles').on('value', function(snap){
     if (!snap.val()) {
       ref.child('tiles').set({
@@ -33,7 +26,6 @@ function init() {
       });
     } else {
       var board = snap.val(); 
-      clearDom(); 
       $('#t0').text(board.t0); $('#t1').text(board.t1); $('#t2').text(board.t2);
       $('#t3').text(board.t3); $('#t4').text(board.t4); $('#t5').text(board.t5);
       $('#t6').text(board.t6); $('#t7').text(board.t7); $('#t8').text(board.t8);
@@ -64,6 +56,14 @@ function init() {
     if (snap.val()) { obj.moves = snap.val(); };
   })
 
+
+  ref.child('turn').on('value', function(snap){
+    if (snap.val() && obj.state === "game") {
+      obj.turn = snap.val()
+      $('#display').text(obj.turn + "'s turn");
+    };
+  });
+  
   ref.child('postGame').on('value', function(snap){
     if (snap.val() && obj.state === "gameOver") { 
       $('#display').text(snap.val()); 
@@ -83,6 +83,7 @@ function enterName() {
     if (!snapshot.val()) {
       playersRef.push($('#name').val() );
       player = 'X'; 
+      $('#display').text("You are player X! Waiting for player O")
     } else if( Object.keys(snapshot.val()).length === 1){
       playersRef.push($('#name').val() );
       player = 'O';
@@ -116,31 +117,9 @@ function markTile(){
     return oldVal + 1; 
   });
   obj.moves++; 
-  
-  // updateTiles(); 
-
-  // if (obj.state === "game") {
-  //   changeTurns(); 
-  // };
 }
 
 
-
-
-
-
-  // ref.child('tiles').on('value', function(snap){
-
-
-  // })
-
-
-function clearDom(){
-  var str = '#t';
-  for (var i = 0; i <= 8; i++) {
-    $(str+i).text('');
-  };
-};
 
 function changeTurns(){
   if (obj.turn === "X") {
@@ -195,5 +174,12 @@ function reset(){
   $('#display').text("X's turn")
   ref.child('moves').set(0); 
   obj.moves = 0; 
-  updateTiles();  
+  clearDom(); 
 }
+
+function clearDom(){
+  var str = '#t';
+  for (var i = 0; i <= 8; i++) {
+    $(str+i).text('');
+  };
+};
