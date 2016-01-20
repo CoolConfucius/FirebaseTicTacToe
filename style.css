@@ -1,0 +1,67 @@
+body {
+  background-color: black; 
+  text-align: center; 
+  font-size: 16px; 
+}
+
+#lobby {
+  margin-top: 50px; 
+}
+
+#game {
+  margin-bottom: 100px; 
+}
+
+
+
+#game > .row > div{
+  height: 100px; 
+}
+
+
+#display, .tile, .green{
+  background-color: green;   
+  border: solid;
+}
+
+#display{
+  border: none;
+  font-size: 50px; 
+}
+
+.half > div{
+  height: 100px;
+  border: none;
+}
+
+.quarter > div{
+  height: 50px;
+  border: none;
+}
+.tile{
+  font-size: 100px;
+  color: white;
+  border-color: black;
+}
+
+.tile:hover{
+  cursor: pointer;
+}
+
+
+.space {
+  background-color: black; 
+}
+
+.timer {
+  font-size: 32px; 
+  color: white;
+}
+
+span{
+  color: white;
+}
+
+#play, #display {
+  padding-top: 30px; 
+}
