@@ -24,8 +24,7 @@ function init() {
       };
     } else {
       $('#display').text("Waiting for two players to log in.");
-    }
-    
+    }    
   })
 
   ref.child('tiles').on('value', function(snap){
@@ -82,7 +81,10 @@ function init() {
     } else { $('#reset').hide(); }; 
   });
 
-  $('#submit').click(enterName);
+  if (!player) { 
+    $('#submit').show().click(enterName); 
+  };
+  
   $('.tile').click(markTile); 
 };
 
@@ -177,15 +179,14 @@ function reset(){
     t3: '', t4: '', t5: '', 
     t6: '', t7: '', t8: ''
   });
-  ref.child('state').set('game');
-  obj.state = 'game';
-  ref.child('turn').set('X');
-  obj.turn = "X"; 
-  $('#display').text("X's turn")
-  ref.child('moves').set(0); 
-  obj.moves = 0; 
+  ref.child('state').set('lobby');
+  obj.state = 'lobby';
+  ref.child('turn').remove();
+  playersRef.remove(); 
+  ref.child('moves').remove(); 
   clearDom(); 
   $('#reset').hide(); 
+  $('#submit').show(); 
 }
 
 function clearDom(){
