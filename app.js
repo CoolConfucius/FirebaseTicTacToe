@@ -40,6 +40,10 @@ function init() {
     if (snap.val()) { obj.moves = snap.val(); };
   })
 
+  ref.child('winner').on('value', function(snap){
+    if (snap.val()) { $('#display').text(snap.val() + 'wins!') };
+  })
+
   $('#submit').click(enterName);
   $('.tile').click(markTile); 
 
