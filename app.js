@@ -152,15 +152,15 @@ function changeTurns(){
 
 var win = function(xo) {
   console.log("win?");
-  var $t0 = $('#t0'); 
-  var $t1 = $('#t1'); 
-  var $t2 = $('#t2'); 
-  var $t3 = $('#t3'); 
-  var $t4 = $('#t4'); 
-  var $t5 = $('#t5'); 
-  var $t6 = $('#t6'); 
-  var $t7 = $('#t7'); 
-  var $t8 = $('#t8'); 
+  var $t0 = $('#t0').text(); 
+  var $t1 = $('#t1').text(); 
+  var $t2 = $('#t2').text(); 
+  var $t3 = $('#t3').text(); 
+  var $t4 = $('#t4').text(); 
+  var $t5 = $('#t5').text(); 
+  var $t6 = $('#t6').text(); 
+  var $t7 = $('#t7').text(); 
+  var $t8 = $('#t8').text(); 
   return(
     check($t0, $t1, $t2, xo) || 
     check($t3, $t4, $t5, xo) || 
@@ -174,7 +174,7 @@ var win = function(xo) {
 };
 
 var check = function(t, t1, t2, xo){
-  return (t.text()===xo && t1.text()===xo && t2.text()===xo);
+  return (t===xo && t1===xo && t2===xo);
 };
 
 
