@@ -15,7 +15,7 @@ body {
 
 
 #game > .row > div{
-  height: 100px; 
+  height: 75px; 
 }
 
 
@@ -29,17 +29,8 @@ body {
   font-size: 50px; 
 }
 
-.half > div{
-  height: 100px;
-  border: none;
-}
-
-.quarter > div{
-  height: 50px;
-  border: none;
-}
 .tile{
-  font-size: 100px;
+  font-size: 75px;
   color: white;
   border-color: black;
 }
@@ -49,14 +40,6 @@ body {
 }
 
 
-.space {
-  background-color: black; 
-}
-
-.timer {
-  font-size: 32px; 
-  color: white;
-}
 
 span{
   color: white;
