@@ -21,11 +21,11 @@ function init() {
     if (snap.val() && obj.state === "lobby") {
       if ( Object.keys(snap.val()).length === 1 ) {
         $('#submit').show(); 
-        $('#display').text("Waiting for one more player to log in.");
+        $('#display').text("Waiting for player O to log in.");
       };
     } else {
       $('#submit').show(); 
-      $('#display').text("Waiting for two players to log in.");
+      $('#display').text("Waiting for player X to log in.");
     }    
   })
 
