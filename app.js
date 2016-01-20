@@ -40,14 +40,16 @@ function init() {
     if (snap.val()) { obj.moves = snap.val(); };
   })
 
-  ref.child('winner').on('value', function(snap){
-    if (snap.val()) { $('#display').text(snap.val() + 'wins!') };
+  ref.child('postGame').on('value', function(snap){
+    if (snap.val()) { 
+      $('#display').text(snap.val()); 
+      $('#reset').show().click(reset); 
+    };
   })
 
   $('#submit').click(enterName);
   $('.tile').click(markTile); 
 
-  // $('#play').click(startGame); 
   $('#game').on('click', '.tile',(markTile)); 
 };
 
@@ -118,11 +120,12 @@ function updateTiles(){
         $('#display').text(obj.turn+" wins!");
         obj.state = "gameOver";
         ref.child('state').set('gameOver'); 
-        ref.child('winner').set(obj.turn);
+        ref.child('postGame').set(obj.turn + "wins!");
       } else if (obj.moves === 9){
         $('#display').text("It's a tie!");
         obj.state = "gameOver";
         ref.child('state').set('gameOver'); 
+        ref.child('postGame').set("It's a tie!");
       }
     }; 
 
@@ -173,3 +176,22 @@ var win = function(xo) {
 var check = function(t, t1, t2, xo){
   return (t.text()===xo && t1.text()===xo && t2.text()===xo);
 };
+
+
+function reset(){
+  if (obj.state !== "gameOver") { return };
+  ref.child('postGame').set("p1's turn"); 
+  ref.child('tiles').set({
+    t0: '', t1: '', t2: '', 
+    t3: '', t4: '', t5: '', 
+    t6: '', t7: '', t8: ''
+  });
+  ref.child('state').set('game');
+  obj.state = 'game';
+  ref.child('turn').set('p1');
+  $('#display').text("p1's turn")
+  obj.turn = "p1"; 
+  ref.child('moves').set(0); 
+  obj.moves = 0; 
+  updateTiles();  
+}
